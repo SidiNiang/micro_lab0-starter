@@ -1,4 +1,4 @@
-```bash
+
 #!/bin/bash
 
 # Script de démarrage pour le TP0: Analyse et Refactoring SOLID
@@ -923,4 +923,3 @@ echo "2. Lancer l'application: ./gradlew bootRun"
 echo "3. Accéder à l'API via: http://localhost:8080/api/books"
 echo ""
 echo "Le projet est prêt pour le TP0 sur l'application des principes SOLID!"
-```
