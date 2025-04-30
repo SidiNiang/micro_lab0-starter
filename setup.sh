@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # Script de démarrage pour le TP0: Analyse et Refactoring SOLID
@@ -66,9 +65,9 @@ public class LibraryApplication {
     public static void main(String[] args) {
         SpringApplication.run(LibraryApplication.class, args);
     }
-
+    
     @Bean
-    public CommandLineRunner dataLoader(BookRepository bookRepository,
+    public CommandLineRunner dataLoader(BookRepository bookRepository, 
                                        MemberRepository memberRepository,
                                        LoanRepository loanRepository) {
         return args -> {
@@ -76,25 +75,25 @@ public class LibraryApplication {
             Book book1 = new Book("Introduction aux Microservices", "Sam Newman", "978-1491950357", 2019);
             Book book2 = new Book("Clean Code", "Robert C. Martin", "978-0132350884", 2008);
             Book book3 = new Book("Design Patterns", "Erich Gamma", "978-0201633610", 1994);
-
+            
             bookRepository.save(book1);
             bookRepository.save(book2);
             bookRepository.save(book3);
-
+            
             // Ajout de quelques membres
             Member member1 = new Member("Jean Dupont", "jean.dupont@email.com", "0123456789");
             Member member2 = new Member("Marie Martin", "marie.martin@email.com", "0987654321");
-
+            
             memberRepository.save(member1);
             memberRepository.save(member2);
-
+            
             // Création d'un prêt
             Loan loan = new Loan();
             loan.setBookId(book1.getId());
             loan.setMemberId(member1.getId());
             loan.setLoanDate(LocalDate.now().minusDays(7));
             loan.setDueDate(LocalDate.now().plusDays(7));
-
+            
             loanRepository.save(loan);
         };
     }
@@ -114,59 +113,59 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     private String title;
     private String author;
     private String isbn;
     private int publicationYear;
-
+    
     public Book() {
     }
-
+    
     public Book(String title, String author, String isbn, int publicationYear) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
         this.publicationYear = publicationYear;
     }
-
+    
     // Getters et Setters
     public Long getId() {
         return id;
     }
-
+    
     public void setId(Long id) {
         this.id = id;
     }
-
+    
     public String getTitle() {
         return title;
     }
-
+    
     public void setTitle(String title) {
         this.title = title;
     }
-
+    
     public String getAuthor() {
         return author;
     }
-
+    
     public void setAuthor(String author) {
         this.author = author;
     }
-
+    
     public String getIsbn() {
         return isbn;
     }
-
+    
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
-
+    
     public int getPublicationYear() {
         return publicationYear;
     }
-
+    
     public void setPublicationYear(int publicationYear) {
         this.publicationYear = publicationYear;
     }
@@ -185,49 +184,49 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     private String name;
     private String email;
     private String phone;
-
+    
     public Member() {
     }
-
+    
     public Member(String name, String email, String phone) {
         this.name = name;
         this.email = email;
         this.phone = phone;
     }
-
+    
     // Getters et Setters
     public Long getId() {
         return id;
     }
-
+    
     public void setId(Long id) {
         this.id = id;
     }
-
+    
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
-
+    
     public String getEmail() {
         return email;
     }
-
+    
     public void setEmail(String email) {
         this.email = email;
     }
-
+    
     public String getPhone() {
         return phone;
     }
-
+    
     public void setPhone(String phone) {
         this.phone = phone;
     }
@@ -247,61 +246,61 @@ public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     private Long bookId;
     private Long memberId;
     private LocalDate loanDate;
     private LocalDate dueDate;
     private LocalDate returnDate;
-
+    
     public Loan() {
     }
-
+    
     // Getters et Setters
     public Long getId() {
         return id;
     }
-
+    
     public void setId(Long id) {
         this.id = id;
     }
-
+    
     public Long getBookId() {
         return bookId;
     }
-
+    
     public void setBookId(Long bookId) {
         this.bookId = bookId;
     }
-
+    
     public Long getMemberId() {
         return memberId;
     }
-
+    
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
-
+    
     public LocalDate getLoanDate() {
         return loanDate;
     }
-
+    
     public void setLoanDate(LocalDate loanDate) {
         this.loanDate = loanDate;
     }
-
+    
     public LocalDate getDueDate() {
         return dueDate;
     }
-
+    
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
-
+    
     public LocalDate getReturnDate() {
         return returnDate;
     }
-
+    
     public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
     }
@@ -369,31 +368,31 @@ public class LibraryService {
     private final BookRepository bookRepository;
     private final MemberRepository memberRepository;
     private final LoanRepository loanRepository;
-
+    
     @Autowired
-    public LibraryService(BookRepository bookRepository,
+    public LibraryService(BookRepository bookRepository, 
                          MemberRepository memberRepository,
                          LoanRepository loanRepository) {
         this.bookRepository = bookRepository;
         this.memberRepository = memberRepository;
         this.loanRepository = loanRepository;
     }
-
+    
     // ---- Book Management ----
-
+    
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
-
+    
     public Book getBookById(Long id) {
         return bookRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Book not found"));
     }
-
+    
     public Book createBook(Book book) {
         return bookRepository.save(book);
     }
-
+    
     public Book updateBook(Long id, Book bookDetails) {
         Book book = getBookById(id);
         book.setTitle(bookDetails.getTitle());
@@ -402,27 +401,27 @@ public class LibraryService {
         book.setPublicationYear(bookDetails.getPublicationYear());
         return bookRepository.save(book);
     }
-
+    
     public void deleteBook(Long id) {
         Book book = getBookById(id);
         bookRepository.delete(book);
     }
-
+    
     // ---- Member Management ----
-
+    
     public List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
-
+    
     public Member getMemberById(Long id) {
         return memberRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Member not found"));
     }
-
+    
     public Member createMember(Member member) {
         return memberRepository.save(member);
     }
-
+    
     public Member updateMember(Long id, Member memberDetails) {
         Member member = getMemberById(id);
         member.setName(memberDetails.getName());
@@ -430,81 +429,81 @@ public class LibraryService {
         member.setPhone(memberDetails.getPhone());
         return memberRepository.save(member);
     }
-
+    
     public void deleteMember(Long id) {
         Member member = getMemberById(id);
         memberRepository.delete(member);
     }
-
+    
     // ---- Loan Management ----
-
+    
     public List<Loan> getAllLoans() {
         return loanRepository.findAll();
     }
-
+    
     public Loan getLoanById(Long id) {
         return loanRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Loan not found"));
     }
-
+    
     public Loan createLoan(Loan loan) {
         // Validation: Check if book exists
         Book book = getBookById(loan.getBookId());
-
+        
         // Validation: Check if member exists
         Member member = getMemberById(loan.getMemberId());
-
+        
         // Validation: Check if book is already loaned
         Optional<Loan> existingLoan = loanRepository.findByBookIdAndReturnDateIsNull(loan.getBookId());
         if (existingLoan.isPresent()) {
             throw new RuntimeException("Book is already loaned");
         }
-
+        
         // Set loan dates
         loan.setLoanDate(LocalDate.now());
         loan.setDueDate(LocalDate.now().plusDays(14)); // 2 weeks loan period
-
+        
         // Save and return the loan
         return loanRepository.save(loan);
     }
-
+    
     public Loan returnBook(Long loanId) {
         Loan loan = getLoanById(loanId);
-
+        
         if (loan.getReturnDate() != null) {
             throw new RuntimeException("Book already returned");
         }
-
+        
         loan.setReturnDate(LocalDate.now());
-
+        
         // Send notification to member
         Member member = getMemberById(loan.getMemberId());
         Book book = getBookById(loan.getBookId());
         sendNotification(member, "Thank you for returning '" + book.getTitle() + "'.");
-
+        
         return loanRepository.save(loan);
     }
-
+    
     // ---- Notification Logic ----
-
+    
     public void sendNotification(Member member, String message) {
         // This is a simulation of sending notification
         System.out.println("Notification to " + member.getName() + " (" + member.getEmail() + "): " + message);
     }
-
+    
     // This method mixes book management with notification, violating SRP
     public void notifyDueBooks() {
         LocalDate today = LocalDate.now();
-
+        
         List<Loan> loans = loanRepository.findAll();
-
+        
         for (Loan loan : loans) {
             if (loan.getReturnDate() == null && loan.getDueDate().isBefore(today)) {
                 Member member = getMemberById(loan.getMemberId());
                 Book book = getBookById(loan.getBookId());
-
+                
                 sendNotification(
-                    member,
+                    member, 
                     "The book '" + book.getTitle() + "' is overdue. Please return it as soon as possible."
                 );
             }
@@ -528,32 +527,32 @@ import java.util.List;
 public class BookController {
 
     private final LibraryService libraryService;
-
+    
     @Autowired
     public BookController(LibraryService libraryService) {
         this.libraryService = libraryService;
     }
-
+    
     @GetMapping
     public List<Book> getAllBooks() {
         return libraryService.getAllBooks();
     }
-
+    
     @GetMapping("/{id}")
     public Book getBookById(@PathVariable Long id) {
         return libraryService.getBookById(id);
     }
-
+    
     @PostMapping
     public Book createBook(@RequestBody Book book) {
         return libraryService.createBook(book);
     }
-
+    
     @PutMapping("/{id}")
     public Book updateBook(@PathVariable Long id, @RequestBody Book book) {
         return libraryService.updateBook(id, book);
     }
-
+    
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable Long id) {
         libraryService.deleteBook(id);
@@ -575,32 +574,32 @@ import java.util.List;
 public class MemberController {
 
     private final LibraryService libraryService;
-
+    
     @Autowired
     public MemberController(LibraryService libraryService) {
         this.libraryService = libraryService;
     }
-
+    
     @GetMapping
     public List<Member> getAllMembers() {
         return libraryService.getAllMembers();
     }
-
+    
     @GetMapping("/{id}")
     public Member getMemberById(@PathVariable Long id) {
         return libraryService.getMemberById(id);
     }
-
+    
     @PostMapping
     public Member createMember(@RequestBody Member member) {
         return libraryService.createMember(member);
     }
-
+    
     @PutMapping("/{id}")
     public Member updateMember(@PathVariable Long id, @RequestBody Member member) {
         return libraryService.updateMember(id, member);
     }
-
+    
     @DeleteMapping("/{id}")
     public void deleteMember(@PathVariable Long id) {
         libraryService.deleteMember(id);
@@ -622,27 +621,27 @@ import java.util.List;
 public class LoanController {
 
     private final LibraryService libraryService;
-
+    
     @Autowired
     public LoanController(LibraryService libraryService) {
         this.libraryService = libraryService;
     }
-
+    
     @GetMapping
     public List<Loan> getAllLoans() {
         return libraryService.getAllLoans();
     }
-
+    
     @GetMapping("/{id}")
     public Loan getLoanById(@PathVariable Long id) {
         return libraryService.getLoanById(id);
     }
-
+    
     @PostMapping
     public Loan createLoan(@RequestBody Loan loan) {
         return libraryService.createLoan(loan);
     }
-
+    
     @PutMapping("/{id}/return")
     public Loan returnBook(@PathVariable Long id) {
         return libraryService.returnBook(id);
@@ -669,23 +668,35 @@ spring.jpa.show-sql=true
 server.port=8080
 EOF
 
-# Création du wrapper Gradle
+# Télécharger Gradle Wrapper
 mkdir -p gradle/wrapper
-cat > gradle/wrapper/gradle-wrapper.properties << 'EOF'
-distributionBase=GRADLE_USER_HOME
-distributionPath=wrapper/dists
-distributionUrl=https\://services.gradle.org/distributions/gradle-8.1.1-bin.zip
-zipStoreBase=GRADLE_USER_HOME
-zipStorePath=wrapper/dists
-EOF
+curl -L -o gradle/wrapper/gradle-wrapper.jar https://repo.maven.apache.org/maven2/org/gradle/gradle-wrapper/8.1.1/gradle-wrapper-8.1.1.jar
+curl -L -o gradle/wrapper/gradle-wrapper.properties https://raw.githubusercontent.com/gradle/gradle/v8.1.1/gradle/wrapper/gradle-wrapper.properties
 
-# Création du fichier Dockerfile
+# Création du fichier Dockerfile avec une construction multi-étapes
 cat > Dockerfile << 'EOF'
+FROM openjdk:17-jdk-slim AS build
+
+WORKDIR /app
+
+# Copier les fichiers de projet Gradle
+COPY build.gradle settings.gradle ./
+COPY gradle ./gradle
+COPY gradlew ./
+COPY src ./src
+
+# Donner les permissions d'exécution au script gradlew
+RUN chmod +x ./gradlew
+
+# Construire l'application
+RUN ./gradlew build --no-daemon
+
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-COPY build/libs/library-0.0.1-SNAPSHOT.jar app.jar
+# Copier le JAR depuis l'étape de construction
+COPY --from=build /app/build/libs/library-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 
@@ -747,87 +758,66 @@ Cette application est volontairement conçue avec plusieurs problèmes architect
 ### Option 1: Exécution locale
 
 1. Clonez le dépôt :
-```
-
-git clone https://github.com/elbachir67/micro_lab0-starter.git
-
-```
+   ```
+   git clone https://github.com/elbachir67/micro_lab0-starter.git
+   ```
 
 2. Accédez au répertoire du projet :
-```
-
-cd arch_log_seance1_starter
-
-```
+   ```
+   cd micro_lab0-starter
+   ```
 
 3. Lancez l'application avec Gradle :
-```
-
-./gradlew bootRun
-
-```
+   ```
+   ./gradlew bootRun
+   ```
 
 ### Option 2: Exécution avec Docker
 
 1. Clonez le dépôt :
-```
-
-git clone https://github.com/elbachir67/micro_lab0-starter.git
-
-```
+   ```
+   git clone https://github.com/elbachir67/micro_lab0-starter.git
+   ```
 
 2. Accédez au répertoire du projet :
-```
+   ```
+   cd micro_lab0-starter
+   ```
 
-cd arch_log_seance1_starter
-
-```
-
-3. Construisez l'application avec Gradle :
-```
-
-./gradlew build
-
-```
-
-4. Lancez l'application avec Docker Compose :
-```
-
-docker-compose up -d
-
-```
+3. Lancez l'application avec Docker Compose :
+   ```
+   docker-compose up --build
+   ```
 
 ## Endpoints API
 
 L'application expose les endpoints REST suivants :
 
 - **Livres** :
-- GET `/api/books` - Liste tous les livres
-- GET `/api/books/{id}` - Obtient un livre par son ID
-- POST `/api/books` - Crée un nouveau livre
-- PUT `/api/books/{id}` - Met à jour un livre existant
-- DELETE `/api/books/{id}` - Supprime un livre
+  - GET `/api/books` - Liste tous les livres
+  - GET `/api/books/{id}` - Obtient un livre par son ID
+  - POST `/api/books` - Crée un nouveau livre
+  - PUT `/api/books/{id}` - Met à jour un livre existant
+  - DELETE `/api/books/{id}` - Supprime un livre
 
 - **Membres** :
-- GET `/api/members` - Liste tous les membres
-- GET `/api/members/{id}` - Obtient un membre par son ID
-- POST `/api/members` - Crée un nouveau membre
-- PUT `/api/members/{id}` - Met à jour un membre existant
-- DELETE `/api/members/{id}` - Supprime un membre
+  - GET `/api/members` - Liste tous les membres
+  - GET `/api/members/{id}` - Obtient un membre par son ID
+  - POST `/api/members` - Crée un nouveau membre
+  - PUT `/api/members/{id}` - Met à jour un membre existant
+  - DELETE `/api/members/{id}` - Supprime un membre
 
 - **Prêts** :
-- GET `/api/loans` - Liste tous les prêts
-- GET `/api/loans/{id}` - Obtient un prêt par son ID
-- POST `/api/loans` - Crée un nouveau prêt
-- PUT `/api/loans/{id}/return` - Enregistre le retour d'un livre
+  - GET `/api/loans` - Liste tous les prêts
+  - GET `/api/loans/{id}` - Obtient un prêt par son ID
+  - POST `/api/loans` - Crée un nouveau prêt
+  - PUT `/api/loans/{id}/return` - Enregistre le retour d'un livre
 
 ## Base de données
 
 L'application utilise une base de données H2 en mémoire. La console H2 est accessible à l'URL :
 ```
-
 http://localhost:8080/h2-console
-
 ```
 
 Paramètres de connexion :
@@ -838,24 +828,22 @@ Paramètres de connexion :
 ## Structure du Projet
 
 ```
-
 src/main/java/com/example/library/
 |-- LibraryApplication.java
 |-- controller/
-| |-- BookController.java
-| |-- MemberController.java
-| `-- LoanController.java
+|   |-- BookController.java
+|   |-- MemberController.java
+|   `-- LoanController.java
 |-- model/
 |   |-- Book.java
 |   |-- Member.java
 |   `-- Loan.java
 |-- repository/
-| |-- BookRepository.java
-| |-- MemberRepository.java
-| `-- LoanRepository.java
+|   |-- BookRepository.java
+|   |-- MemberRepository.java
+|   `-- LoanRepository.java
 `-- service/
-`-- LibraryService.java
-
+    `-- LibraryService.java
 ```
 
 ## Notes sur le Design
@@ -917,9 +905,21 @@ out/
 .DS_Store
 EOF
 
+# Initialisation du dépôt Git
+git init
+git add .
+git commit -m "Initial commit: monolithic library application"
+
 echo "Script terminé avec succès! Voici les prochaines étapes:"
 echo "1. Aller dans le dossier: cd arch_log_seance1_starter"
-echo "2. Lancer l'application: ./gradlew bootRun"
-echo "3. Accéder à l'API via: http://localhost:8080/api/books"
+echo "2. Option locale: Lancer l'application avec ./gradlew bootRun"
+echo "3. Option Docker: Lancer avec docker-compose up --build"
+echo "4. Accéder à l'API via: http://localhost:8080/api/books"
+echo ""
+echo "Pour publier sur GitHub:"
+echo "1. Créer un nouveau dépôt sur GitHub: https://github.com/elbachir67/micro_lab0-starter.git"
+echo "2. Connecter votre dépôt local:"
+echo "   git remote add origin https://github.com/elbachir67/micro_lab0-starter.git"
+echo "   git push -u origin master"
 echo ""
 echo "Le projet est prêt pour le TP0 sur l'application des principes SOLID!"
