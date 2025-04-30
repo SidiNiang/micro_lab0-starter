@@ -749,7 +749,7 @@ Cette application est volontairement conçue avec plusieurs problèmes architect
 1. Clonez le dépôt :
 ```
 
-git clone https://github.com/elbachir67/arch_log_seance1_starter.git
+git clone https://github.com/elbachir67/micro_lab0-starter.git
 
 ```
 
@@ -772,7 +772,7 @@ cd arch_log_seance1_starter
 1. Clonez le dépôt :
 ```
 
-git clone https://github.com/elbachir67/arch_log_seance1_starter.git
+git clone https://github.com/elbachir67/micro_lab0-starter.git
 
 ```
 
