@@ -1,4 +1,4 @@
-### Ouvrir git bash et faire les commandes
+## Ouvrir git bash et faire les commandes
 
 ### chmod +x setup.sh
 
